@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Team Information"
+        android:text="About the Team"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Group 12"
+        android:text="Group 12 - COMP 3074"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -33,7 +33,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email: hpape@example.com"
+        android:text="Email: harrison.pape@georgebrown.ca"
         android:textSize="14sp"
         android:layout_marginBottom="4dp"/>
 
@@ -54,14 +54,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email: mstevenson@example.com"
+        android:text="Email: mitchell.stevenson@georgebrown.ca"
         android:textSize="14sp"
         android:layout_marginBottom="4dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student #: 987654321"
+        android:text="Student #: 123456789"
         android:textSize="14sp"
         android:layout_marginBottom="16dp"/>
 
@@ -75,14 +75,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email: hsong@example.com"
+        android:text="Email: harry.song@georgebrown.ca"
         android:textSize="14sp"
         android:layout_marginBottom="4dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student #: 456789123"
+        android:text="Student #: 101524575"
         android:textSize="14sp"
         android:layout_marginBottom="16dp"/>
 
@@ -96,21 +96,23 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email: ashoukat@example.com"
+        android:text="Email: areeb.shoukat@georgebrown.ca"
         android:textSize="14sp"
         android:layout_marginBottom="4dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student #: 321654987"
+        android:text="Student #: 123456789"
         android:textSize="14sp"
+        android:layout_weight="1"
         android:layout_marginBottom="24dp"/>
 
     <Button
         android:id="@+id/backButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#000"
         android:text="Back"/>
 
 
