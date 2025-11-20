@@ -159,14 +159,5 @@
                 android:backgroundTint="#4b4f57"
                 android:layout_marginStart="4dp"/>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:backgroundTint="#000"
-            android:layout_marginTop="4dp"/>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
