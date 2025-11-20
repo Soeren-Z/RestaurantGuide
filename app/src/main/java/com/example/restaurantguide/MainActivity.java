@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +15,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+    private RestaurantAdapter adapter;
+    private ListView listview;
+    public static ArrayList<Restaurant> restaurantsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +36,24 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        listview = findViewById(R.id.restaurantList);
+        restaurantsList = new ArrayList<>();
+
+        // Test data for custom array adapter
+        List<String> testTags = new ArrayList<String>();
+        testTags.add("Italian");
+        testTags.add("Pasta");
+        testTags.add("Spicy");
+        restaurantsList.add(new Restaurant(1, "Test Restaurant", "123 Fake Street",
+                "555-555-5555", "this is a test restaurant", testTags, 4.5F));
+
+        adapter = new RestaurantAdapter(this, restaurantsList);
+        listview.setAdapter(adapter);
+
+        /*listview.setOnItemClickListener((adapterView, view, position, id) -> {
+            //Restaurant restaurant = (Restaurant) adapterView.getItemAtPosition(position);
+            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
+        });*/
     }
     public void addRestaurant(View view) {
         Intent intent = new Intent(this, AddEditRestaurantActivity.class);
