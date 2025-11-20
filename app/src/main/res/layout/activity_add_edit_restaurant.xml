@@ -90,19 +90,12 @@
                 android:id="@+id/saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="40dp"
                 android:text="Save"
-                android:backgroundTint="#4b4f57" />
-
-            <Button
-                android:id="@+id/cancelButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Cancel / Back"
-                android:backgroundTint="#000" />
-
+                android:textColor="@color/white"
+                android:backgroundTint="#000000" />
         </LinearLayout>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,7 +39,6 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="0.5"
-            android:rating="2.5"
             android:isIndicator="true"
             android:layout_gravity="center_horizontal"
             android:scaleX="1.2"
@@ -58,7 +57,6 @@
             android:id="@+id/addressTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="123 Fake Street, City, Country"
             android:textSize="14sp"
             android:layout_marginBottom="8dp"/>
 
@@ -91,8 +89,7 @@
                 <TextView
                     android:id="@+id/phoneTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="(123) 456-7890"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
@@ -108,8 +105,7 @@
                 <TextView
                     android:id="@+id/tagsTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fast Food, Cheap"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 
@@ -125,7 +121,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="This is the description area. It will fill the remaining space on the screen and extend down to the buttons below."
             android:textSize="14sp"
             android:gravity="top"
             android:ellipsize="end"/>
@@ -159,14 +154,5 @@
                 android:backgroundTint="#4b4f57"
                 android:layout_marginStart="4dp"/>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:backgroundTint="#000"
-            android:layout_marginTop="4dp"/>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
