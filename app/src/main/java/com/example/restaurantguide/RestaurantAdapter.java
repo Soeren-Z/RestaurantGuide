@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -38,9 +37,6 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
             intent.putExtra("restaurant_id", restaurant.getId());
             context.startActivity(intent);
         });
-        /*convertView.setOnClickListener(v -> {
-            Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
-        });*/
         return convertView;
     }
 }

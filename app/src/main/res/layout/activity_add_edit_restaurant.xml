@@ -90,8 +90,11 @@
                 android:id="@+id/saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="40dp"
                 android:text="Save"
+                android:textColor="@color/white"
                 android:backgroundTint="#000000" />
         </LinearLayout>
     </LinearLayout>

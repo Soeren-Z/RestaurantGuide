@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,11 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new RestaurantAdapter(this, restaurantsList);
         listview.setAdapter(adapter);
-
-        /*listview.setOnItemClickListener((adapterView, view, position, id) -> {
-            //Restaurant restaurant = (Restaurant) adapterView.getItemAtPosition(position);
-            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
-        });*/
     }
     public void addRestaurant(View view) {
         Intent intent = new Intent(this, AddEditRestaurantActivity.class);
