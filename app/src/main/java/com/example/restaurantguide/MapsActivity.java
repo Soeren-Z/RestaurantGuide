@@ -2,7 +2,6 @@ package com.example.restaurantguide;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,10 +16,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.restaurantguide.databinding.ActivityMapsBinding;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private RestaurantStorage storage;
+    private int restaurantId;
+    private Restaurant restaurant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,40 +30,56 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Initialize storage
+        storage = new RestaurantStorage(this);
+
+        // Get restaurant ID from intent
+        restaurantId = getIntent().getIntExtra("RESTAURANT_ID", -1);
+
+        if (restaurantId != -1) {
+            restaurant = storage.getRestaurant(restaurantId);
+        }
+
+        // Obtain the SupportMapFragment and get notified when the map is ready
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // TODO: Geocode the restaurant address to get lat/lng coordinates
+        // For now, use a default location (Toronto)
+        LatLng defaultLocation = new LatLng(43.6532, -79.3832);
+
+        if (restaurant != null) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(defaultLocation)
+                    .title(restaurant.getName())
+                    .snippet(restaurant.getAddress()));
+        } else {
+            mMap.addMarker(new MarkerOptions()
+                    .position(defaultLocation)
+                    .title("Restaurant Location"));
+        }
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15));
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
@@ -75,28 +93,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
     }
+
     @Override
     protected void onStop() {
         super.onStop();
     }
+
     @Override
     protected void onRestart() {
         super.onRestart();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (storage != null) {
+            storage.close();
+        }
     }
 }
