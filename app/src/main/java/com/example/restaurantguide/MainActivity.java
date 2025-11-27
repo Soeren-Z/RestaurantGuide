@@ -30,21 +30,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
         listview = findViewById(R.id.restaurantList);
-        restaurantsList = new ArrayList<>();
 
-        // Test data for custom array adapter
-        List<String> testTags = new ArrayList<String>();
-        testTags.add("Italian");
-        testTags.add("Pasta");
-        testTags.add("Spicy");
-        restaurantsList.add(new Restaurant(1, "Test Restaurant", "123 Fake Street",
-                "555-555-5555", "this is a test restaurant", testTags, 4.5F));
+        if (restaurantsList == null) {
+            restaurantsList = new ArrayList<>();
+            // Test data for custom array adapter
+            List<String> testTags = new ArrayList<String>();
+            testTags.add("Italian");
+            testTags.add("Pasta");
+            testTags.add("Spicy");
+            restaurantsList.add(new Restaurant(1, "Test Restaurant", "123 Fake Street",
+                    "555-555-5555", "this is a test restaurant", testTags, 4.5F));
+        }
 
         adapter = new RestaurantAdapter(this, restaurantsList);
         listview.setAdapter(adapter);
