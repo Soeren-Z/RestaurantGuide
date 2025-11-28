@@ -1,8 +1,13 @@
 package com.example.restaurantguide;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.List;
 
+@Entity(tableName = "restaurants")
 public class Restaurant {
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
     private String address;
