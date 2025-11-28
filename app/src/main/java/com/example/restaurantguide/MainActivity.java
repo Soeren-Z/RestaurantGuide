@@ -18,9 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private AppDatabase db;
     private RestaurantAdapter adapter;
     private ListView listview;
-    public static ArrayList<Restaurant> restaurantsList;
+    private ArrayList<RestaurantWithTags> restaurantsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +37,19 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        db = AppDatabase.getInstance(this);
         listview = findViewById(R.id.restaurantList);
 
-        if (restaurantsList == null) {
+        /*if (restaurantsList == null) {
             restaurantsList = new ArrayList<>();
             // Test data for custom array adapter
-            List<String> testTags = new ArrayList<String>();
-            testTags.add("Italian");
-            testTags.add("Pasta");
-            testTags.add("Spicy");
             restaurantsList.add(new Restaurant(1, "Test Restaurant", "123 Fake Street",
-                    "555-555-5555", "this is a test restaurant", testTags, 4.5F));
-        }
-
+                    "555-555-5555", "this is a test restaurant", 4.5F));
+        }*/
+        loadRestaurants();
+    }
+    private void loadRestaurants() {
+        restaurantsList = (ArrayList<RestaurantWithTags>) db.restaurantDao().getAllRestaurantWithTags();
         adapter = new RestaurantAdapter(this, restaurantsList);
         listview.setAdapter(adapter);
     }

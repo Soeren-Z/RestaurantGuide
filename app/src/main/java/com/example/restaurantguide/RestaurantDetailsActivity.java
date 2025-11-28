@@ -1,7 +1,5 @@
 package com.example.restaurantguide;
 
-import static com.example.restaurantguide.MainActivity.restaurantsList;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,9 +70,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         // Load restaurant details
         int id = getIntent().getIntExtra("restaurant_id", -1);
 
-        if (id != -1) {
+        /*if (id != -1) {
             Restaurant restaurant = restaurantsList.stream()
-                    .filter(r -> r.getId() == id)
+                    .filter(r -> r.getRestaurantId() == id)
                     .findFirst()
                     .orElse(null);
 
@@ -87,7 +85,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
                 // ---------- TAG CHIPS ----------
                 tagsContainer.removeAllViews();
-                for (String tag : restaurant.getTags()) {
+                *//*for (String tag : restaurant.getTags()) {
                     TextView chip = new TextView(this);
                     chip.setText(tag);
                     chip.setPadding(24, 12, 24, 12);
@@ -103,12 +101,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                     chip.setLayoutParams(params);
 
                     tagsContainer.addView(chip);
-                }
+                }*//*
 
                 // Optional image
                 // restaurantImage.setImageResource(R.drawable.ic_image_placeholder);
             }
-        }
+        }*/
 
         // SHARE BUTTON
         shareButton.setOnClickListener(v -> {

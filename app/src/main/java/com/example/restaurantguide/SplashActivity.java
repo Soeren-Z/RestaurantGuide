@@ -13,5 +13,6 @@ public class SplashActivity extends AppCompatActivity {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         startActivity(new Intent(this, StartUpActivity.class));
-        finish();    }
+        finish();
+    }
 }
