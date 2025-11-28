@@ -1,5 +1,6 @@
 package com.example.restaurantguide.ui.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -151,21 +152,30 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         });
     }
     public void deleteRestaurant(View view) {
-        new Thread(() -> {
-            long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
-            if(restaurantId != -1) {
-                Restaurant toDelete = db.restaurantDao().getRestaurantById(restaurantId);
-                if(toDelete != null) {
-                    db.restaurantDao().delete(toDelete);
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Restaurant deleted", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-                } else {
-                    runOnUiThread(() -> Toast.makeText(this, "Restaurant not found", Toast.LENGTH_SHORT).show());
-                }
-            }
-        }).start();
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Restaurant")
+                .setMessage("Are you sure you want to delete this restaurant?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    // Only proceed with deleting after user confirmation
+                    new Thread(() -> {
+                        long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
+                        if(restaurantId != -1) {
+                            Restaurant toDelete = db.restaurantDao().getRestaurantById(restaurantId);
+                            if(toDelete != null) {
+                                db.restaurantDao().delete(toDelete);
+                                runOnUiThread(() -> {
+                                    Toast.makeText(this, "Restaurant deleted", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                });
+                            } else {
+                                runOnUiThread(() -> Toast.makeText(this, "Restaurant not found", Toast.LENGTH_SHORT).show());
+                            }
+                        }
+                    }).start();
+                })
+                // Cancel button -> goes back and does not change anything
+                .setNegativeButton("Cancel", null)
+                .show();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
