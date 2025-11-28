@@ -15,6 +15,15 @@
         android:orientation="vertical"
         android:paddingTop="?attr/actionBarSize">
 
+        <!-- IMAGE GOES AT TOP -->
+        <ImageView
+            android:id="@+id/restaurantImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="12dp"
+            android:background="#D9D9D9" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +53,7 @@
             android:scaleX="1.2"
             android:scaleY="1.2"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -58,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <Button
             android:id="@+id/viewMapButton"
@@ -67,46 +76,41 @@
             android:text="📍 Get Directions"
             android:textColor="#FFFFFF"
             android:backgroundTint="#3d9620"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="20dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:baselineAligned="false"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Phone"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/phoneTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+            <!-- TAG CHIPS CONTAINER -->
             <LinearLayout
+                android:id="@+id/tagsContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tags"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/tagsTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                android:orientation="horizontal"
+                android:paddingTop="4dp" />
         </LinearLayout>
 
         <TextView
@@ -123,13 +127,13 @@
             android:layout_weight="1"
             android:textSize="14sp"
             android:gravity="top"
-            android:ellipsize="end"/>
+            android:ellipsize="end" />
 
         <Button
             android:id="@+id/shareButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Share Restaurant"/>
+            android:text="Share Restaurant" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,7 +147,8 @@
                 android:layout_weight="1"
                 android:text="Edit Information"
                 android:backgroundTint="#4b4f57"
-                android:layout_marginEnd="4dp"/>
+                android:textColor="@color/white"
+                android:layout_marginEnd="4dp" />
 
             <Button
                 android:id="@+id/deleteButton"
@@ -152,7 +157,9 @@
                 android:layout_weight="1"
                 android:text="Delete Restaurant"
                 android:backgroundTint="#4b4f57"
-                android:layout_marginStart="4dp"/>
+                android:textColor="@color/white"
+                android:layout_marginStart="4dp" />
         </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
