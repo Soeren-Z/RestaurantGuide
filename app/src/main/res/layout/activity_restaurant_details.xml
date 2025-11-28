@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RestaurantDetailsActivity">
+    tools:context=".ui.activities.RestaurantDetailsActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -158,7 +158,8 @@
                 android:text="Delete Restaurant"
                 android:backgroundTint="#4b4f57"
                 android:textColor="@color/white"
-                android:layout_marginStart="4dp" />
+                android:layout_marginStart="4dp"
+                android:onClick="deleteRestaurant" />
         </LinearLayout>
 
     </LinearLayout>

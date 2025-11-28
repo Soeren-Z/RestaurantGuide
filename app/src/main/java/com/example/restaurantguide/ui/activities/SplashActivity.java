@@ -1,4 +1,4 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,5 +13,6 @@ public class SplashActivity extends AppCompatActivity {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         startActivity(new Intent(this, StartUpActivity.class));
-        finish();    }
+        finish();
+    }
 }

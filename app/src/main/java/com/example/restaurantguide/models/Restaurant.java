@@ -1,29 +1,29 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.models;
 
-import java.util.List;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "restaurants")
 public class Restaurant {
-    private int id;
+    @PrimaryKey(autoGenerate = true)
+    private long restaurantId;
     private String name;
     private String address;
     private String phone;
     private String description;
-    private List<String> tags;
     private float rating;
-    public Restaurant(int id, String name, String address, String phone, String description, List<String> tags, float rating) {
-        this.id = id;
+    public Restaurant(String name, String address, String phone, String description, float rating) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.description = description;
-        this.tags = tags;
         this.rating = rating;
     }
-    public int getId() {
-        return id;
+    public long getRestaurantId() {
+        return restaurantId;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setRestaurantId(long id) {
+        this.restaurantId = id;
     }
     public String getName() {
         return name;
@@ -48,12 +48,6 @@ public class Restaurant {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-    public List<String> getTags() {
-        return tags;
-    }
-    public void setTags(List<String> tags) {
-        this.tags = tags;
     }
     public float getRating() {
         return rating;

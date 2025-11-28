@@ -1,4 +1,4 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +14,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.restaurantguide.R;
+import com.example.restaurantguide.adapters.RestaurantAdapter;
+import com.example.restaurantguide.db.AppDatabase;
+import com.example.restaurantguide.models.RestaurantWithTags;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private AppDatabase db;
     private RestaurantAdapter adapter;
     private ListView listview;
-    public static ArrayList<Restaurant> restaurantsList;
+    private ArrayList<RestaurantWithTags> restaurantsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +41,12 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        db = AppDatabase.getInstance(this);
         listview = findViewById(R.id.restaurantList);
-
-        if (restaurantsList == null) {
-            restaurantsList = new ArrayList<>();
-            // Test data for custom array adapter
-            List<String> testTags = new ArrayList<String>();
-            testTags.add("Italian");
-            testTags.add("Pasta");
-            testTags.add("Spicy");
-            restaurantsList.add(new Restaurant(1, "Test Restaurant", "123 Fake Street",
-                    "555-555-5555", "this is a test restaurant", testTags, 4.5F));
-        }
-
+        loadRestaurants();
+    }
+    private void loadRestaurants() {
+        restaurantsList = (ArrayList<RestaurantWithTags>) db.restaurantDao().getAllRestaurantWithTags();
         adapter = new RestaurantAdapter(this, restaurantsList);
         listview.setAdapter(adapter);
     }
@@ -81,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        loadRestaurants();
     }
     @Override
     protected void onPause() {

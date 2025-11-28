@@ -1,17 +1,18 @@
-package com.example.restaurantguide;
-
-import static com.example.restaurantguide.MainActivity.restaurantsList;
+package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +21,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class RestaurantDetailsActivity extends AppCompatActivity {
+import com.example.restaurantguide.R;
+import com.example.restaurantguide.db.AppDatabase;
+import com.example.restaurantguide.models.Restaurant;
+import com.example.restaurantguide.models.RestaurantWithTags;
+import com.example.restaurantguide.models.Tag;
 
+public class RestaurantDetailsActivity extends AppCompatActivity {
+    private AppDatabase db;
     private TextView name;
     private TextView address;
     private TextView phone;
@@ -53,7 +60,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        db = AppDatabase.getInstance(this);
         // XML connections
         restaurantImage = findViewById(R.id.restaurantImageView);
         name = findViewById(R.id.nameTextView);
@@ -70,44 +77,45 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         tagsContainer = findViewById(R.id.tagsContainer);
 
         // Load restaurant details
-        int id = getIntent().getIntExtra("restaurant_id", -1);
+        long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
 
-        if (id != -1) {
-            Restaurant restaurant = restaurantsList.stream()
-                    .filter(r -> r.getId() == id)
-                    .findFirst()
-                    .orElse(null);
+        if(restaurantId != -1) {
+            //Executor executor = Executors.newSingleThreadExecutor();
+            new Thread(() -> {
+                RestaurantWithTags restaurant = db.restaurantDao().getRestaurantWithTags(restaurantId);
 
-            if (restaurant != null) {
-                name.setText(restaurant.getName());
-                address.setText(restaurant.getAddress());
-                phone.setText(restaurant.getPhone());
-                description.setText(restaurant.getDescription());
-                rating.setRating(restaurant.getRating());
+                if (restaurant != null) {
+                    runOnUiThread(() -> {
+                        name.setText(restaurant.getRestaurant().getName());
+                        address.setText(restaurant.getRestaurant().getAddress());
+                        phone.setText(restaurant.getRestaurant().getPhone());
+                        description.setText(restaurant.getRestaurant().getDescription());
+                        rating.setRating(restaurant.getRestaurant().getRating());
 
-                // ---------- TAG CHIPS ----------
-                tagsContainer.removeAllViews();
-                for (String tag : restaurant.getTags()) {
-                    TextView chip = new TextView(this);
-                    chip.setText(tag);
-                    chip.setPadding(24, 12, 24, 12);
-                    chip.setBackgroundResource(R.drawable.chip_background);
-                    chip.setTextColor(getResources().getColor(android.R.color.white));
-                    chip.setTextSize(14f);
+                        // ---------- TAG CHIPS ----------
+                        tagsContainer.removeAllViews();
+                        for(Tag tag : restaurant.getTags()) {
+                            TextView chip = new TextView(this);
+                            chip.setText(tag.getTagName());
+                            chip.setPadding(24, 12, 24, 12);
+                            chip.setBackgroundResource(R.drawable.chip_background);
+                            chip.setTextColor(Color.BLACK);
+                            chip.setTextSize(14f);
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.setMargins(12, 12, 12, 12);
-                    chip.setLayoutParams(params);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params.setMargins(12, 12, 12, 12);
+                            chip.setLayoutParams(params);
 
-                    tagsContainer.addView(chip);
+                            tagsContainer.addView(chip);
+                        }
+                        // Optional image
+                        // restaurantImage.setImageResource(R.drawable.ic_image_placeholder);
+                    });
                 }
-
-                // Optional image
-                // restaurantImage.setImageResource(R.drawable.ic_image_placeholder);
-            }
+            }).start();
         }
 
         // SHARE BUTTON
@@ -137,23 +145,33 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         // EDIT BUTTON
         editButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EditRestaurantActivity.class);
-            intent.putExtra("restaurant_id", id);
+            Intent intent = new Intent(this, AddEditRestaurantActivity.class);
+            intent.putExtra("restaurant_id", restaurantId);
             startActivity(intent);
         });
-
-        // DELETE BUTTON (placeholder only)
-        deleteButton.setOnClickListener(v -> {
-            // For prototype: do nothing or add confirmation popup
-        });
     }
-
+    public void deleteRestaurant(View view) {
+        new Thread(() -> {
+            long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
+            if(restaurantId != -1) {
+                Restaurant toDelete = db.restaurantDao().getRestaurantById(restaurantId);
+                if(toDelete != null) {
+                    db.restaurantDao().delete(toDelete);
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Restaurant deleted", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(this, "Restaurant not found", Toast.LENGTH_SHORT).show());
+                }
+            }
+        }).start();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

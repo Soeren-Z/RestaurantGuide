@@ -1,0 +1,21 @@
+package com.example.restaurantguide.daos;
+
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.Query;
+
+import com.example.restaurantguide.models.Tag;
+
+import java.util.List;
+
+@Dao
+public interface TagDao {
+    @Insert
+    long insertTag(Tag tag);
+
+    @Query("SELECT * FROM Tag WHERE tagName = :name LIMIT 1")
+    Tag findByName(String name);
+
+    @Query("SELECT * FROM Tag")
+    List<Tag> getAllTags();
+}

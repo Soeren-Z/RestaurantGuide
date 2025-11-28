@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddEditRestaurantActivity">
+    tools:context=".ui.activities.AddEditRestaurantActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -48,13 +48,15 @@
             android:inputType="phone"
             android:layout_marginBottom="8dp"/>
 
-        <EditText
-            android:id="@+id/tagsEditText"
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/tagDropDown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tags (e.g. Chinese, Breakfast)"
+            android:hint="Select Tags (comma to add)"
             android:inputType="text"
-            android:layout_marginBottom="8dp"/>
+            android:padding="10dp"
+            android:layout_marginTop="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -95,7 +97,8 @@
                 android:layout_marginBottom="40dp"
                 android:text="Save"
                 android:textColor="@color/white"
-                android:backgroundTint="#000000" />
+                android:backgroundTint="#000000"
+                android:onClick="saveRestaurant"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
