@@ -9,7 +9,7 @@ import java.util.List;
 @Dao
 public interface TagDao {
     @Insert
-    void insertTag(Tag tag);
+    long insertTag(Tag tag);
 
     @Query("SELECT * FROM Tag WHERE tagName = :name LIMIT 1")
     Tag findByName(String name);

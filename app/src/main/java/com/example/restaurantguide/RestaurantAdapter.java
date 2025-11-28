@@ -2,6 +2,7 @@ package com.example.restaurantguide;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,18 @@ public class RestaurantAdapter extends ArrayAdapter<RestaurantWithTags> {
         name.setText(restaurant.getRestaurant().getName());
         rating.setRating(restaurant.getRestaurant().getRating());
         address.setText(restaurant.getRestaurant().getAddress());
-        tags.setText(restaurant.getTags().toString());
+
+        List<Tag> tagsList = restaurant.getTags();
+        if(tagsList != null && !tagsList.isEmpty()) {
+            StringBuilder tagString = new StringBuilder();
+            for (int i = 0; i < tagsList.size(); i++) {
+                tagString.append(tagsList.get(i).getTagName());
+                if (i != tagsList.size() - 1) tagString.append(", ");
+            }
+            tags.setText(tagString.toString());
+        } else {
+            tags.setText("");
+        }
 
         convertView.setOnClickListener(view -> {
             Intent intent = new Intent(context, RestaurantDetailsActivity.class);

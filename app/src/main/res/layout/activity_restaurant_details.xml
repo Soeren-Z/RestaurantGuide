@@ -158,7 +158,8 @@
                 android:text="Delete Restaurant"
                 android:backgroundTint="#4b4f57"
                 android:textColor="@color/white"
-                android:layout_marginStart="4dp" />
+                android:layout_marginStart="4dp"
+                android:onClick="deleteRestaurant" />
         </LinearLayout>
 
     </LinearLayout>

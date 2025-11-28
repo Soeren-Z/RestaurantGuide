@@ -53,6 +53,33 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
         rating = findViewById(R.id.ratingBar);
         description = findViewById(R.id.descriptionEditText);
 
+        loadTagsIntoDropDown();
+
+        long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
+        if (restaurantId != -1) {
+            new Thread(() -> {
+                RestaurantWithTags restaurantWithTags = db.restaurantDao().getRestaurantWithTags(restaurantId);
+                if (restaurantWithTags != null) {
+                    runOnUiThread(() -> {
+                        Restaurant r = restaurantWithTags.getRestaurant();
+                        name.setText(r.getName());
+                        address.setText(r.getAddress());
+                        phone.setText(r.getPhone());
+                        rating.setRating(r.getRating());
+                        description.setText(r.getDescription());
+
+                        // Convert tags list to comma-separated string for multi-select input
+                        List<Tag> tags = restaurantWithTags.getTags();
+                        StringBuilder tagStr = new StringBuilder();
+                        for (int i = 0; i < tags.size(); i++) {
+                            tagStr.append(tags.get(i).getTagName());
+                            if (i < tags.size() - 1) tagStr.append(", ");
+                        }
+                        tagDropDown.setText(tagStr.toString());
+                    });
+                }
+            }).start();
+        }
     }
     private void loadTagsIntoDropDown() {
         new Thread(() -> {
@@ -92,13 +119,17 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
                     continue;
                 }
                 Tag tag = db.tagDao().findByName(tagName);
-                if(tag != null) {
-                    RestaurantTagCrossRef ref = new RestaurantTagCrossRef(restaurantId, tag.getTagId());
-                    db.restaurantDao().insertRestaurantTagCrossRef(ref);
+                if(tag == null) {
+                    tag = new Tag(tagName);
+                    long tagId = db.tagDao().insertTag(tag);
+                    tag.setTagId(tagId);
                 }
+                RestaurantTagCrossRef ref = new RestaurantTagCrossRef(restaurantId, tag.getTagId());
+                db.restaurantDao().insertRestaurantTagCrossRef(ref);
             }
             runOnUiThread(() -> {
                 Toast.makeText(this, "Restaurant Saved", Toast.LENGTH_SHORT).show();
+                finish();
             });
         }).start();
     }

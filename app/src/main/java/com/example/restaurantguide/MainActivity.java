@@ -15,7 +15,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private AppDatabase db;
@@ -39,13 +38,6 @@ public class MainActivity extends AppCompatActivity {
         });
         db = AppDatabase.getInstance(this);
         listview = findViewById(R.id.restaurantList);
-
-        /*if (restaurantsList == null) {
-            restaurantsList = new ArrayList<>();
-            // Test data for custom array adapter
-            restaurantsList.add(new Restaurant(1, "Test Restaurant", "123 Fake Street",
-                    "555-555-5555", "this is a test restaurant", 4.5F));
-        }*/
         loadRestaurants();
     }
     private void loadRestaurants() {
@@ -82,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        loadRestaurants();
     }
     @Override
     protected void onPause() {
