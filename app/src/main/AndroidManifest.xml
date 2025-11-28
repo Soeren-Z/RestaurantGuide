@@ -27,27 +27,27 @@
             android:value="YOUR_API_KEY" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".ui.activities.MapsActivity"
             android:exported="false"
-            android:parentActivityName=".RestaurantDetailsActivity"
+            android:parentActivityName=".ui.activities.RestaurantDetailsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".AddEditRestaurantActivity"
+            android:name=".ui.activities.AddEditRestaurantActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".ui.activities.MainActivity" />
         <activity
-            android:name=".RestaurantDetailsActivity"
+            android:name=".ui.activities.RestaurantDetailsActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".ui.activities.MainActivity" />
         <activity
-            android:name=".StartUpActivity"
+            android:name=".ui.activities.StartUpActivity"
             android:exported="false" />
         <activity
-            android:name=".TeamInfoActivity"
+            android:name=".ui.activities.TeamInfoActivity"
             android:exported="false"
-            android:parentActivityName=".StartUpActivity" />
+            android:parentActivityName=".ui.activities.StartUpActivity" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.activities.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.RestaurantGuide.Splash">
             <intent-filter>
@@ -56,7 +56,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true" />
     </application>
 

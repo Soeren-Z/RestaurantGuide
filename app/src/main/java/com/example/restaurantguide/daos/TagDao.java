@@ -1,8 +1,10 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.daos;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.example.restaurantguide.models.Tag;
 
 import java.util.List;
 

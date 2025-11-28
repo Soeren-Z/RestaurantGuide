@@ -1,4 +1,4 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

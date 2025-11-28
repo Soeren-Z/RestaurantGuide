@@ -1,9 +1,7 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.models;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.util.List;
 
 @Entity(tableName = "restaurants")
 public class Restaurant {

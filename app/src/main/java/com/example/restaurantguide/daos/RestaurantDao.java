@@ -1,4 +1,4 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.daos;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -6,6 +6,10 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+
+import com.example.restaurantguide.models.Restaurant;
+import com.example.restaurantguide.models.RestaurantTagCrossRef;
+import com.example.restaurantguide.models.RestaurantWithTags;
 
 import java.util.List;
 

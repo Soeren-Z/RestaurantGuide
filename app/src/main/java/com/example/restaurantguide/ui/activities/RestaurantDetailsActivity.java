@@ -1,4 +1,4 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,8 +21,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import com.example.restaurantguide.R;
+import com.example.restaurantguide.db.AppDatabase;
+import com.example.restaurantguide.models.Restaurant;
+import com.example.restaurantguide.models.RestaurantWithTags;
+import com.example.restaurantguide.models.Tag;
 
 public class RestaurantDetailsActivity extends AppCompatActivity {
     private AppDatabase db;

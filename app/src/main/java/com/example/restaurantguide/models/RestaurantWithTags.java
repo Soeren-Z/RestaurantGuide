@@ -1,4 +1,4 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.models;
 
 import androidx.room.Embedded;
 import androidx.room.Junction;

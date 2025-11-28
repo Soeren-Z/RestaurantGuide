@@ -1,9 +1,11 @@
-package com.example.restaurantguide;
+package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,13 +14,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class TeamInfoActivity extends AppCompatActivity {
+import com.example.restaurantguide.R;
+import com.example.restaurantguide.adapters.RestaurantAdapter;
+import com.example.restaurantguide.db.AppDatabase;
+import com.example.restaurantguide.models.RestaurantWithTags;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private AppDatabase db;
+    private RestaurantAdapter adapter;
+    private ListView listview;
+    private ArrayList<RestaurantWithTags> restaurantsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_team_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -28,6 +41,18 @@ public class TeamInfoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        db = AppDatabase.getInstance(this);
+        listview = findViewById(R.id.restaurantList);
+        loadRestaurants();
+    }
+    private void loadRestaurants() {
+        restaurantsList = (ArrayList<RestaurantWithTags>) db.restaurantDao().getAllRestaurantWithTags();
+        adapter = new RestaurantAdapter(this, restaurantsList);
+        listview.setAdapter(adapter);
+    }
+    public void addRestaurant(View view) {
+        Intent intent = new Intent(this, AddEditRestaurantActivity.class);
+        startActivity(intent);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,6 +79,7 @@ public class TeamInfoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        loadRestaurants();
     }
     @Override
     protected void onPause() {
