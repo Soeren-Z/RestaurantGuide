@@ -1,7 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.RestaurantGuide" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Base.Theme.RestaurantGuide" parent="Theme.Material3.Light.NoActionBar">
+
+        <!-- Colors -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorPrimaryVariant">@color/md_primary_dark</item>
+
+        <!-- Global default styles -->
+        <item name="materialButtonStyle">@style/Widget.RestaurantGuide.Button.Primary</item>
+        <item name="editTextStyle">@style/Widget.RestaurantGuide.EditText</item>
+        <item name="autoCompleteTextViewStyle">@style/Widget.RestaurantGuide.MultiAutoComplete</item>
+    </style>
+
+    <style name="Theme.RestaurantGuide" parent="Base.Theme.RestaurantGuide" />
+
+    <style name="Theme.RestaurantGuide.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <item name="postSplashScreenTheme">@style/Theme.RestaurantGuide</item>
+
+
+        <item name="android:forceDarkAllowed">false</item>
+
     </style>
 </resources>

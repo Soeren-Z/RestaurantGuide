@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- EditText Input Boxes -->
+    <style name="Widget.RestaurantGuide.EditText" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/bg_edittext_rounded</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+        <item name="android:textColorHint">@color/md_hint</item>
+    </style>
+
+    <!-- Primary button -->
+    <style name="Widget.RestaurantGuide.Button.Primary"
+        parent="Widget.MaterialComponents.Button">
+
+        <item name="android:background">@drawable/bg_button_primary</item>
+        <item name="backgroundTint">@null</item>
+
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textColor">@color/md_on_primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">12dp</item>
+
+    </style>
+
+    <!-- Secondary button -->
+    <style name="Widget.RestaurantGuide.Button.Secondary"
+        parent="Widget.MaterialComponents.Button">
+
+        <item name="cornerRadius">8dp</item>
+        <item name="backgroundTint">@color/md_secondary_bg</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <!--  Large text fields  -->
+    <style name="Widget.RestaurantGuide.MultiAutoComplete" parent="@style/Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:background">@drawable/bg_edittext_rounded</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+        <item name="android:textColorHint">@color/md_hint</item>
+    </style>
+
+</resources>
