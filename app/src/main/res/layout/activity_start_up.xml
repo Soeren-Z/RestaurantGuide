@@ -14,7 +14,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@android:drawable/btn_star_big_on"
-        app:tint="#CCCCCC"
+        app:tint="#EBD833"
         android:contentDescription="App Logo"/>
 
     <TextView
@@ -30,15 +30,13 @@
 
     <Button
         android:id="@+id/logRestaurantButton"
-        android:layout_width="match_parent"
+        style="@style/Widget.RestaurantGuide.Button.Primary"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Log a Restaurant"
-        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textAllCaps="false"
-        android:backgroundTint="#000"
-        android:padding="16dp"/>
+        />
 
     <TextView
         android:id="@+id/aboutTeamText"

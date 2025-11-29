@@ -47,10 +47,8 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="40dp"
             android:text="Log a Restaurant"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textAllCaps="false"
-            android:backgroundTint="#000000"
             android:padding="16dp"
             android:onClick="addRestaurant"/>
 
