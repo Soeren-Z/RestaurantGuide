@@ -23,7 +23,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     context.getApplicationContext(),
                     AppDatabase.class,
                     "restaurants_database"
-            ).allowMainThreadQueries().build();
+            ).build();
         }
         return INSTANCE;
     }

@@ -55,4 +55,9 @@ public class RestaurantAdapter extends ArrayAdapter<RestaurantWithTags> {
         });
         return convertView;
     }
+    public void updateList(List<RestaurantWithTags> newList) {
+        clear();
+        addAll(newList);
+        notifyDataSetChanged();
+    }
 }

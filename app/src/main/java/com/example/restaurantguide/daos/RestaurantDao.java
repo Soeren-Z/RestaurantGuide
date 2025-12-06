@@ -1,11 +1,15 @@
 package com.example.restaurantguide.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
 import com.example.restaurantguide.models.Restaurant;
 import com.example.restaurantguide.models.RestaurantTagCrossRef;
@@ -17,19 +21,29 @@ import java.util.List;
 public interface RestaurantDao {
     @Insert
     long insertRestaurant(Restaurant restaurant);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertRestaurantTagCrossRef(RestaurantTagCrossRef crossRef);
 
+    @Update
+    void update(Restaurant restaurant);
+
     @Transaction
     @Query("SELECT * FROM restaurants")
-    List<RestaurantWithTags> getAllRestaurantWithTags();
+    LiveData<List<RestaurantWithTags>> getAllRestaurantWithTags();
 
     @Transaction
     @Query("SELECT * FROM restaurants WHERE restaurantId = :restaurantId")
-    RestaurantWithTags getRestaurantWithTags(long restaurantId);
+    Single<RestaurantWithTags> getRestaurantWithTags(long restaurantId);
 
     @Query("SELECT * FROM restaurants WHERE restaurantId = :restaurantId")
-    Restaurant getRestaurantById(long restaurantId);
+    Single<Restaurant> getRestaurantById(long restaurantId);
     @Delete
     void delete(Restaurant restaurant);
+
+    @Query("DELETE FROM RestaurantTagCrossRef WHERE restaurantId = :restaurantId")
+    Completable deleteRestaurantTagCrossRef(long restaurantId);
+
+    @Query("SELECT * FROM restaurants WHERE restaurantId = :restaurantId LIMIT 1")
+    Restaurant getRestaurantByIdDirect(long restaurantId);
 }

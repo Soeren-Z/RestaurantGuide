@@ -81,9 +81,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
 
         if(restaurantId != -1) {
-            //Executor executor = Executors.newSingleThreadExecutor();
             new Thread(() -> {
-                RestaurantWithTags restaurant = db.restaurantDao().getRestaurantWithTags(restaurantId);
+                RestaurantWithTags restaurant = db.restaurantDao().getRestaurantWithTags(restaurantId).blockingGet();
 
                 if (restaurant != null) {
                     runOnUiThread(() -> {
@@ -160,7 +159,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                     new Thread(() -> {
                         long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
                         if(restaurantId != -1) {
-                            Restaurant toDelete = db.restaurantDao().getRestaurantById(restaurantId);
+                            Restaurant toDelete = db.restaurantDao().getRestaurantById(restaurantId).blockingGet();
                             if(toDelete != null) {
                                 db.restaurantDao().delete(toDelete);
                                 runOnUiThread(() -> {

@@ -48,4 +48,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.2.0")
     implementation("androidx.room:room-runtime:2.8.4")
     annotationProcessor("androidx.room:room-compiler:2.8.4")
+
+    implementation("androidx.room:room-rxjava3:2.6.1")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
 }

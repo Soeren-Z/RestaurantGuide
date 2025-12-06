@@ -36,6 +36,7 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
     private MultiAutoCompleteTextView tagDropDown;
     private RatingBar rating;
     private EditText description;
+    private long restaurantId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        restaurantId = getIntent().getLongExtra("restaurant_id", -1);
         db = AppDatabase.getInstance(this);
 
         name = findViewById(R.id.nameEditText);
@@ -62,10 +64,10 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
 
         loadTagsIntoDropDown();
 
-        long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
+
         if (restaurantId != -1) {
             new Thread(() -> {
-                RestaurantWithTags restaurantWithTags = db.restaurantDao().getRestaurantWithTags(restaurantId);
+                RestaurantWithTags restaurantWithTags = db.restaurantDao().getRestaurantWithTags(restaurantId).blockingGet();
                 if (restaurantWithTags != null) {
                     runOnUiThread(() -> {
                         Restaurant r = restaurantWithTags.getRestaurant();
@@ -90,10 +92,12 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
     }
     private void loadTagsIntoDropDown() {
         new Thread(() -> {
-            List<Tag> allTags = db.tagDao().getAllTags();
+            List<Tag> allTags = db.tagDao().getAllTags().getValue();
             List<String> tagNames = new ArrayList<>();
-            for (Tag t : allTags) {
-                tagNames.add(t.getTagName());
+            if(allTags != null) {
+                for (Tag t : allTags) {
+                    tagNames.add(t.getTagName());
+                }
             }
             runOnUiThread(() -> {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -116,23 +120,39 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
         String restaurantDescription = description.getText().toString().trim();
 
         new Thread(() -> {
-            Restaurant restaurant = new Restaurant(restaurantName, restaurantAddress, restaurantPhone, restaurantDescription, restaurantRating);
-            long restaurantId = db.restaurantDao().insertRestaurant(restaurant);
+            if(restaurantId == -1) {
+                Restaurant restaurant = new Restaurant(restaurantName, restaurantAddress, restaurantPhone, restaurantDescription, restaurantRating);
+                restaurantId = db.restaurantDao().insertRestaurant(restaurant);
+            } else {
+                Restaurant restaurant = db.restaurantDao().getRestaurantByIdDirect(restaurantId);
+                restaurant.setName(restaurantName);
+                restaurant.setAddress(restaurantAddress);
+                restaurant.setPhone(restaurantPhone);
+                restaurant.setRating(restaurantRating);
+                restaurant.setDescription(restaurantDescription);
+                db.restaurantDao().update(restaurant);
+            }
 
-            String[] selectedTags = tagInput.split(",");
-            for(String tagName : selectedTags) {
-                tagName= tagName.trim();
-                if(tagName.isEmpty()) {
-                    continue;
+            db.restaurantDao().deleteRestaurantTagCrossRef(restaurantId);
+
+            if(!tagInput.isEmpty()) {
+                String[] selectedTags = tagInput.split(",");
+                for(String tagName : selectedTags) {
+                    tagName= tagName.trim();
+                    if(tagName.isEmpty()) {
+                        continue;
+                    }
+                    Tag tag = db.tagDao().findByNameDirect(tagName);
+                    long tagId;
+                    if(tag == null) {
+                        Tag newTag = new Tag(tagName);
+                        tagId = db.tagDao().insertTag(newTag);
+                    } else {
+                        tagId = tag.getTagId();
+                    }
+                    RestaurantTagCrossRef ref = new RestaurantTagCrossRef(restaurantId, tagId);
+                    db.restaurantDao().insertRestaurantTagCrossRef(ref);
                 }
-                Tag tag = db.tagDao().findByName(tagName);
-                if(tag == null) {
-                    tag = new Tag(tagName);
-                    long tagId = db.tagDao().insertTag(tag);
-                    tag.setTagId(tagId);
-                }
-                RestaurantTagCrossRef ref = new RestaurantTagCrossRef(restaurantId, tag.getTagId());
-                db.restaurantDao().insertRestaurantTagCrossRef(ref);
             }
             runOnUiThread(() -> {
                 Toast.makeText(this, "Restaurant Saved", Toast.LENGTH_SHORT).show();
