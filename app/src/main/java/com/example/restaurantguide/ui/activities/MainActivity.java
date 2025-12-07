@@ -46,9 +46,14 @@ public class MainActivity extends AppCompatActivity {
         loadRestaurants();
     }
     private void loadRestaurants() {
-        restaurantsList = (ArrayList<RestaurantWithTags>) db.restaurantDao().getAllRestaurantWithTags();
-        adapter = new RestaurantAdapter(this, restaurantsList);
-        listview.setAdapter(adapter);
+        db.restaurantDao().getAllRestaurantWithTags().observe(this, restaurantsList -> {
+            if(adapter == null) {
+                adapter = new RestaurantAdapter(this, new ArrayList<>(restaurantsList));
+                listview.setAdapter(adapter);
+            } else {
+                adapter.updateList(restaurantsList);
+            }
+        });
     }
     public void addRestaurant(View view) {
         Intent intent = new Intent(this, AddEditRestaurantActivity.class);
