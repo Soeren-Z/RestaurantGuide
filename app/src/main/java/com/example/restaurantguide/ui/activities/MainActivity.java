@@ -16,6 +16,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.restaurantguide.R;
 import com.example.restaurantguide.adapters.RestaurantAdapter;
@@ -23,6 +25,7 @@ import com.example.restaurantguide.db.AppDatabase;
 import com.example.restaurantguide.models.RestaurantWithTags;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private AppDatabase db;
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView listview;
     private ArrayList<RestaurantWithTags> restaurantsList;
     private EditText searchBar;
+    private LiveData<List<RestaurantWithTags>> currentLiveData;
+    private Observer<List<RestaurantWithTags>> currentObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,24 +80,34 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void searchRestaurants(String query) {
-        db.restaurantDao().searchRestaurantsWithTags(query).observe(this, restaurantsList -> {
-            if(adapter == null) {
-                adapter = new RestaurantAdapter(this, new ArrayList<>(restaurantsList));
-                listview.setAdapter(adapter);
-            } else {
-                adapter.updateList(restaurantsList);
-            }
-        });
+        LiveData<List<RestaurantWithTags>> liveData = db.restaurantDao().searchRestaurantsWithTags(query);
+        observeLiveData(liveData);
     }
+    
     private void loadRestaurants() {
-        db.restaurantDao().getAllRestaurantWithTags().observe(this, restaurantsList -> {
+        LiveData<List<RestaurantWithTags>> liveData = db.restaurantDao().getAllRestaurantWithTags();
+        observeLiveData(liveData);
+    }
+    
+    private void observeLiveData(LiveData<List<RestaurantWithTags>> liveData) {
+        // Remove previous observer if it exists
+        if (currentLiveData != null && currentObserver != null) {
+            currentLiveData.removeObserver(currentObserver);
+        }
+        
+        // Create new observer
+        currentObserver = restaurants -> {
             if(adapter == null) {
-                adapter = new RestaurantAdapter(this, new ArrayList<>(restaurantsList));
+                adapter = new RestaurantAdapter(this, new ArrayList<>(restaurants));
                 listview.setAdapter(adapter);
             } else {
-                adapter.updateList(restaurantsList);
+                adapter.updateList(restaurants);
             }
-        });
+        };
+        
+        // Store reference and observe
+        currentLiveData = liveData;
+        liveData.observe(this, currentObserver);
     }
     public void addRestaurant(View view) {
         Intent intent = new Intent(this, AddEditRestaurantActivity.class);
@@ -139,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onDestroy() {
+        // Remove observer to prevent memory leaks
+        if (currentLiveData != null && currentObserver != null) {
+            currentLiveData.removeObserver(currentObserver);
+        }
         super.onDestroy();
     }
 }
