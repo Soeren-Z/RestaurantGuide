@@ -2,9 +2,12 @@ package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private RestaurantAdapter adapter;
     private ListView listview;
     private ArrayList<RestaurantWithTags> restaurantsList;
+    private EditText searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,42 @@ public class MainActivity extends AppCompatActivity {
         });
         db = AppDatabase.getInstance(this);
         listview = findViewById(R.id.restaurantList);
+        searchBar = findViewById(R.id.searchBar);
+        setupSearchBar();
         loadRestaurants();
+    }
+    
+    private void setupSearchBar() {
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String query = s.toString().trim();
+                if (query.isEmpty()) {
+                    loadRestaurants();
+                } else {
+                    searchRestaurants(query);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+    
+    private void searchRestaurants(String query) {
+        db.restaurantDao().searchRestaurantsWithTags(query).observe(this, restaurantsList -> {
+            if(adapter == null) {
+                adapter = new RestaurantAdapter(this, new ArrayList<>(restaurantsList));
+                listview.setAdapter(adapter);
+            } else {
+                adapter.updateList(restaurantsList);
+            }
+        });
     }
     private void loadRestaurants() {
         db.restaurantDao().getAllRestaurantWithTags().observe(this, restaurantsList -> {
