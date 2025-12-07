@@ -25,41 +25,40 @@
             android:padding="16dp"/>
 
         <TextView
+            android:id="@+id/restaurantNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Restaurant Name Here"
+            android:text="Restaurant Name"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginBottom="8dp"/>
 
         <TextView
+            android:id="@+id/restaurantAddressTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="123 Main Street, Toronto, ON"
+            android:text="Address"
             android:textSize="16sp"
             android:gravity="center"
             android:layout_marginBottom="16dp"/>
 
-        <FrameLayout
+        <org.osmdroid.views.MapView
+            android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#E0E0E0">
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".ui.activities.MapsActivity" />
-        </FrameLayout>
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/getDirectionsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="📍 Get Directions in Google Maps"
-            android:layout_marginTop="16dp"/>
+            style="@style/Widget.RestaurantGuide.Button.Primary"
+            android:textSize="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

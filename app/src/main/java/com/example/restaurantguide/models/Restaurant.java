@@ -12,6 +12,8 @@ public class Restaurant {
     private String phone;
     private String description;
     private float rating;
+    private String imageUri;
+    
     public Restaurant(String name, String address, String phone, String description, float rating) {
         this.name = name;
         this.address = address;
@@ -54,5 +56,11 @@ public class Restaurant {
     }
     public void setRating(float rating) {
         this.rating = rating;
+    }
+    public String getImageUri() {
+        return imageUri;
+    }
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 }

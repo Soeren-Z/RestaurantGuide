@@ -1,15 +1,23 @@
 package com.example.restaurantguide.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +44,10 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
     private MultiAutoCompleteTextView tagDropDown;
     private RatingBar rating;
     private EditText description;
+    private Button selectImageButton;
+    private Uri selectedImageUri;
     private long restaurantId = -1;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +72,10 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
         tagDropDown = findViewById(R.id.tagDropDown);
         rating = findViewById(R.id.ratingBar);
         description = findViewById(R.id.descriptionEditText);
+        selectImageButton = findViewById(R.id.selectImageButton);
 
+        selectImageButton.setOnClickListener(v -> openImagePicker());
+        
         loadTagsIntoDropDown();
 
 
@@ -76,6 +90,12 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
                         phone.setText(r.getPhone());
                         rating.setRating(r.getRating());
                         description.setText(r.getDescription());
+                        
+                        // Load image if exists
+                        if (r.getImageUri() != null && !r.getImageUri().isEmpty()) {
+                            selectedImageUri = Uri.parse(r.getImageUri());
+                            updateImageButtonText();
+                        }
 
                         // Convert tags list to comma-separated string for multi-select input
                         List<Tag> tags = restaurantWithTags.getTags();
@@ -90,6 +110,90 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
             }).start();
         }
     }
+    
+    private void updateImageButtonText() {
+        if (selectedImageUri != null) {
+            selectImageButton.setText("Choose/Take Another Image");
+        } else {
+            selectImageButton.setText("Choose Image");
+        }
+    }
+    
+    private void openImagePicker() {
+        // Create intent to pick image from gallery
+        Intent pickIntent = new Intent(Intent.ACTION_PICK);
+        pickIntent.setType("image/*");
+        
+        // Create intent to take photo with camera
+        Intent takePhotoIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        
+        // Create chooser that allows both options
+        Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{takePhotoIntent});
+        
+        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri imageUri = data.getData();
+                
+                // If data.getData() is null, it's from camera - handle bitmap
+                if (imageUri == null && data.getExtras() != null) {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    if (photo != null) {
+                        // Save bitmap to a file and get URI
+                        imageUri = saveBitmapToFile(photo);
+                        if (imageUri != null) {
+                            selectedImageUri = imageUri;
+                            updateImageButtonText();
+                            Toast.makeText(this, "Image selected", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+                        }
+                        return;
+                    }
+                }
+                
+                // Handle gallery selection
+                if (imageUri != null) {
+                    selectedImageUri = imageUri;
+                    updateImageButtonText();
+                    Toast.makeText(this, "Image selected", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_CANCELED) {
+            // User cancelled image selection - do nothing
+        }
+    }
+    
+    private Uri saveBitmapToFile(Bitmap bitmap) {
+        try {
+            // Save to app's internal storage
+            File imagesDir = new File(getFilesDir(), "restaurant_images");
+            if (!imagesDir.exists()) {
+                imagesDir.mkdirs();
+            }
+            
+            String filename = "restaurant_" + System.currentTimeMillis() + ".jpg";
+            File imageFile = new File(imagesDir, filename);
+            
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.flush();
+            fos.close();
+            
+            // Return file URI
+            return Uri.fromFile(imageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     private void loadTagsIntoDropDown() {
         new Thread(() -> {
             List<Tag> allTags = db.tagDao().getAllTags().getValue();
@@ -120,8 +224,11 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
         String restaurantDescription = description.getText().toString().trim();
 
         new Thread(() -> {
+            String imageUriString = selectedImageUri != null ? selectedImageUri.toString() : null;
+            
             if(restaurantId == -1) {
                 Restaurant restaurant = new Restaurant(restaurantName, restaurantAddress, restaurantPhone, restaurantDescription, restaurantRating);
+                restaurant.setImageUri(imageUriString);
                 restaurantId = db.restaurantDao().insertRestaurant(restaurant);
             } else {
                 Restaurant restaurant = db.restaurantDao().getRestaurantByIdDirect(restaurantId);
@@ -130,6 +237,7 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
                 restaurant.setPhone(restaurantPhone);
                 restaurant.setRating(restaurantRating);
                 restaurant.setDescription(restaurantDescription);
+                restaurant.setImageUri(imageUriString);
                 db.restaurantDao().update(restaurant);
             }
 
@@ -156,6 +264,7 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
             }
             runOnUiThread(() -> {
                 Toast.makeText(this, "Restaurant Saved", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
             });
         }).start();

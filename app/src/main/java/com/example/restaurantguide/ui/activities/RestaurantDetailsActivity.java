@@ -43,6 +43,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
     private LinearLayout tagsContainer;
     private ImageView restaurantImage;
+    private long restaurantId = -1;
+    private static final int EDIT_RESTAURANT_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +80,44 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         tagsContainer = findViewById(R.id.tagsContainer);
 
         // Load restaurant details
-        long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
+        restaurantId = getIntent().getLongExtra("restaurant_id", -1);
+        loadRestaurantDetails();
 
+        // SHARE BUTTON
+        shareButton.setOnClickListener(v -> {
+            String text = "Check out this restaurant:\n\n"
+                    + "Name: " + name.getText() + "\n"
+                    + "Address: " + address.getText() + "\n"
+                    + "Phone: " + phone.getText() + "\n"
+                    + "Rating: " + rating.getRating() + " stars\n"
+                    + "Description: " + description.getText();
+
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+            sendIntent.setType("text/plain");
+
+            startActivity(Intent.createChooser(sendIntent, "Share Restaurant"));
+        });
+
+        // MAP BUTTON - Opens full-screen map
+        viewMapButton.setOnClickListener(v -> {
+            String restaurantNameStr = name.getText().toString();
+            String addr = address.getText().toString();
+            Intent mapIntent = new Intent(this, MapsActivity.class);
+            mapIntent.putExtra("restaurant_name", restaurantNameStr);
+            mapIntent.putExtra("restaurant_address", addr);
+            startActivity(mapIntent);
+        });
+
+        // EDIT BUTTON
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddEditRestaurantActivity.class);
+            intent.putExtra("restaurant_id", restaurantId);
+            startActivityForResult(intent, EDIT_RESTAURANT_REQUEST);
+        });
+    }
+    
+    private void loadRestaurantDetails() {
         if(restaurantId != -1) {
             new Thread(() -> {
                 RestaurantWithTags restaurant = db.restaurantDao().getRestaurantWithTags(restaurantId).blockingGet();
@@ -91,6 +129,20 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                         phone.setText(restaurant.getRestaurant().getPhone());
                         description.setText(restaurant.getRestaurant().getDescription());
                         rating.setRating(restaurant.getRestaurant().getRating());
+                        
+                        // Load image if exists
+                        String imageUriString = restaurant.getRestaurant().getImageUri();
+                        if (imageUriString != null && !imageUriString.isEmpty()) {
+                            try {
+                                Uri imageUri = Uri.parse(imageUriString);
+                                restaurantImage.setImageURI(imageUri);
+                                restaurantImage.setVisibility(View.VISIBLE);
+                            } catch (Exception e) {
+                                restaurantImage.setVisibility(View.GONE);
+                            }
+                        } else {
+                            restaurantImage.setVisibility(View.GONE);
+                        }
 
                         // ---------- TAG CHIPS ----------
                         tagsContainer.removeAllViews();
@@ -111,44 +163,26 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
                             tagsContainer.addView(chip);
                         }
-                        // Optional image
-                        // restaurantImage.setImageResource(R.drawable.ic_image_placeholder);
                     });
                 }
             }).start();
         }
-
-        // SHARE BUTTON
-        shareButton.setOnClickListener(v -> {
-            String text = "Check out this restaurant:\n\n"
-                    + "Name: " + name.getText() + "\n"
-                    + "Address: " + address.getText() + "\n"
-                    + "Phone: " + phone.getText() + "\n"
-                    + "Rating: " + rating.getRating() + " stars\n"
-                    + "Description: " + description.getText();
-
-            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, text);
-            sendIntent.setType("text/plain");
-
-            startActivity(Intent.createChooser(sendIntent, "Share Restaurant"));
-        });
-
-        // MAP BUTTON
-        viewMapButton.setOnClickListener(v -> {
-            String addr = address.getText().toString();
-            Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(addr));
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
-        });
-
-        // EDIT BUTTON
-        editButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddEditRestaurantActivity.class);
-            intent.putExtra("restaurant_id", restaurantId);
-            startActivity(intent);
-        });
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EDIT_RESTAURANT_REQUEST && resultCode == RESULT_OK) {
+            // Refresh the restaurant details when returning from edit
+            loadRestaurantDetails();
+        }
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh data when returning to this activity
+        loadRestaurantDetails();
     }
     public void deleteRestaurant(View view) {
         new AlertDialog.Builder(this)
@@ -157,7 +191,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                 .setPositiveButton("Delete", (dialog, which) -> {
                     // Only proceed with deleting after user confirmation
                     new Thread(() -> {
-                        long restaurantId = getIntent().getLongExtra("restaurant_id", -1);
                         if(restaurantId != -1) {
                             Restaurant toDelete = db.restaurantDao().getRestaurantById(restaurantId).blockingGet();
                             if(toDelete != null) {

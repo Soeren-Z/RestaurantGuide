@@ -12,7 +12,7 @@ import com.example.restaurantguide.models.Restaurant;
 import com.example.restaurantguide.models.RestaurantTagCrossRef;
 import com.example.restaurantguide.models.Tag;
 
-@Database(entities = {Restaurant.class, Tag.class, RestaurantTagCrossRef.class}, version = 3)
+@Database(entities = {Restaurant.class, Tag.class, RestaurantTagCrossRef.class}, version = 4)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
     public abstract RestaurantDao restaurantDao();
@@ -23,7 +23,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     context.getApplicationContext(),
                     AppDatabase.class,
                     "restaurants_database"
-            ).build();
+            ).fallbackToDestructiveMigration().build();
         }
         return INSTANCE;
     }

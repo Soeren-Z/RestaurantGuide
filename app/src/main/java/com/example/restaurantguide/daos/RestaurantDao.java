@@ -46,4 +46,12 @@ public interface RestaurantDao {
 
     @Query("SELECT * FROM restaurants WHERE restaurantId = :restaurantId LIMIT 1")
     Restaurant getRestaurantByIdDirect(long restaurantId);
+
+    @Transaction
+    @Query("SELECT DISTINCT r.* FROM restaurants r " +
+           "LEFT JOIN RestaurantTagCrossRef rtc ON r.restaurantId = rtc.restaurantId " +
+           "LEFT JOIN Tag t ON rtc.tagId = t.tagId " +
+           "WHERE r.name LIKE '%' || :query || '%' " +
+           "OR t.tagName LIKE '%' || :query || '%'")
+    LiveData<List<RestaurantWithTags>> searchRestaurantsWithTags(String query);
 }
