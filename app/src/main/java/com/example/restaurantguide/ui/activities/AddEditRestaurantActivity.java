@@ -196,9 +196,9 @@ public class AddEditRestaurantActivity extends AppCompatActivity {
     
     private void loadTagsIntoDropDown() {
         new Thread(() -> {
-            List<Tag> allTags = db.tagDao().getAllTags().getValue();
+            List<Tag> allTags = db.tagDao().getAllTagsDirect();
             List<String> tagNames = new ArrayList<>();
-            if(allTags != null) {
+            if(allTags != null && !allTags.isEmpty()) {
                 for (Tag t : allTags) {
                     tagNames.add(t.getTagName());
                 }

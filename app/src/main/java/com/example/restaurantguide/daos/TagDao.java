@@ -22,6 +22,9 @@ public interface TagDao {
     @Query("SELECT * FROM Tag")
     LiveData<List<Tag>> getAllTags();
 
+    @Query("SELECT * FROM Tag")
+    List<Tag> getAllTagsDirect();
+
     @Query("SELECT * FROM tag WHERE tagName = :name LIMIT 1")
     Tag findByNameDirect(String name);
 }
