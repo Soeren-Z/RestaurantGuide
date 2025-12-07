@@ -9,98 +9,134 @@
 
     <include layout="@layout/toolbar" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="?attr/actionBarSize"
-        android:paddingHorizontal="20dp"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add/Edit Restaurant"
-            android:layout_marginTop="12dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:paddingBottom="16dp"/>
-
-        <EditText
-            android:id="@+id/nameEditText"
-            style="@style/Widget.RestaurantGuide.EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:hint="Restaurant Name"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/addressEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Address"
-            android:inputType="textPostalAddress"
-            android:layout_marginBottom="8dp"/>
-
-        <EditText
-            android:id="@+id/phoneEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Phone Number"
-            android:inputType="phone"
-            android:layout_marginBottom="8dp"/>
-
-
-        <MultiAutoCompleteTextView
-            android:id="@+id/tagDropDown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Add Tags (comma to add)"
-            android:inputType="text" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rating:"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
-
-        <RatingBar
-            android:id="@+id/ratingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="0.5"
-            android:layout_marginBottom="8dp"/>
-
-        <EditText
-            android:id="@+id/descriptionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="Enter Description / Notes Here..."
-            android:inputType="textMultiLine"
-            android:gravity="top"
-            android:layout_marginBottom="16dp"
-            />
+        android:fillViewport="true"
+        android:paddingTop="?attr/actionBarSize">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="24dp">
 
-            <Button
-                android:id="@+id/saveButton"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="40dp"
-                android:text="Save"
-                android:onClick="saveRestaurant"/>
+                android:layout_height="wrap_content"
+                android:text="Add/Edit Restaurant"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="24dp"/>
+
+            <EditText
+                android:id="@+id/nameEditText"
+                style="@style/Widget.RestaurantGuide.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Restaurant Name"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/addressEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Address"
+                android:inputType="textPostalAddress"
+                android:layout_marginBottom="16dp"/>
+
+            <EditText
+                android:id="@+id/phoneEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:layout_marginBottom="16dp"/>
+
+            <MultiAutoCompleteTextView
+                android:id="@+id/tagDropDown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Add Tags (comma to add)"
+                android:inputType="text"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rating:"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="16dp"/>
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="0.5" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="120dp"
+                android:hint="Enter Description / Notes Here..."
+                android:inputType="textMultiLine"
+                android:gravity="top|start"
+                android:padding="12dp"
+                android:scrollbars="vertical"
+                android:layout_marginBottom="24dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/selectImageButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Choose Image"
+                    android:layout_marginEnd="8dp"
+                    android:minHeight="48dp" />
+
+                <Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Save"
+                    android:onClick="saveRestaurant"
+                    android:layout_marginStart="8dp"
+                    android:minHeight="48dp" />
+
+            </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
+
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
